@@ -1,17 +1,17 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],   // 👈 ADD THIS LINE HERE
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.css']
 })
-
 export class AppComponent implements OnInit {
   registerForm!: FormGroup;
   loginForm!: FormGroup;
