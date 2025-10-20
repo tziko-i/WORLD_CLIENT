@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
@@ -8,7 +9,7 @@ import { AuthService } from './auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],   // 👈 ADD THIS LINE HERE
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],   // 👈 ADD THIS LINE HERE
   templateUrl: './app.component.html',
   styleUrls: ['./app.css']
 })
@@ -44,18 +45,22 @@ export class AppComponent implements OnInit {
   onRegister() {
     if (this.registerForm.invalid) return;
     this.loading = true;
-    this.auth.register(this.registerForm.value).subscribe({
-      next: () => { alert('Registered!'); this.loading = false; },
-      error: (err: any) => { alert(err?.error?.message || 'Error'); this.loading = false; }
+    const payload = this.registerForm.value;
+    console.log('Register payload:', payload);
+    this.auth.register(payload).subscribe({
+      next: (res: any) => { console.log('Register response:', res); alert('Registered!'); this.loading = false; },
+      error: (err: any) => { console.error('Register error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
     });
   }
 
   onLogin() {
     if (this.loginForm.invalid) return;
     this.loading = true;
-    this.auth.login(this.loginForm.value).subscribe({
-      next: () => { alert('Logged in!'); this.loading = false; },
-      error: (err: any) => { alert(err?.error?.message || 'Error'); this.loading = false; }
+    const payload = this.loginForm.value;
+    console.log('Login payload:', payload);
+    this.auth.login(payload).subscribe({
+      next: (res: any) => { console.log('Login response:', res); alert('Logged in!'); this.loading = false; },
+      error: (err: any) => { console.error('Login error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
     });
   }
 }

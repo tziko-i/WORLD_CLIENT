@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = 'http://localhost:5094/api/auth';
+  // Use proxy-friendly relative path so ng dev-server proxy.conf.json can route /api to the API server
+  private baseUrl = '/api/auth';
 
   constructor(private http: HttpClient) {}
 
