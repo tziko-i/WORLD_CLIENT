@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
     this.loading = true;
     const payload = this.registerForm.value;
     console.log('Register payload:', payload);
-    this.auth.register(payload).subscribe({
+    this.http.post('http://localhost:5094/api/members', payload).subscribe({
       next: (res: any) => { console.log('Register response:', res); alert('Registered!'); this.loading = false; },
       error: (err: any) => { console.error('Register error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
     });
@@ -58,7 +58,7 @@ export class AppComponent implements OnInit {
     this.loading = true;
     const payload = this.loginForm.value;
     console.log('Login payload:', payload);
-    this.auth.login(payload).subscribe({
+    this.http.post('http://localhost:5094/api/members/login', payload).subscribe({
       next: (res: any) => { console.log('Login response:', res); alert('Logged in!'); this.loading = false; },
       error: (err: any) => { console.error('Login error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
     });
