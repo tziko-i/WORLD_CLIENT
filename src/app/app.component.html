@@ -3,11 +3,9 @@
     <h2>Register</h2>
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <label>Username</label>
-      <input formControlName="username" />
+      <input formControlName="displayName" />
       <label>Email</label>
       <input formControlName="email" type="email" />
-      <label>Password</label>
-      <input formControlName="password" type="password" />
       <button type="submit" [disabled]="loading">Register</button>
     </form>
   </div>
@@ -15,10 +13,10 @@
   <div class="card">
     <h2>Login</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-      <label>Username or Email</label>
-      <input formControlName="usernameOrEmail" />
-      <label>Password</label>
-      <input formControlName="password" type="password" />
+      <label>Username </label>
+      <input formControlName="displayName" />
+      <label> Email</label>
+      <input formControlName="email" type="email" />
       <button type="submit" [disabled]="loading">Login</button>
     </form>
   </div>

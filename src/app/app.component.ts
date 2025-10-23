@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
+import { email } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-root',
@@ -25,40 +26,47 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
     this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      displayName: ['', Validators.required],
+      //email: ['', [Validators.required, Validators.email]],
+      email: ['', Validators.required]
     });
 
     this.loginForm = this.fb.group({
-      usernameOrEmail: ['', Validators.required],
-      password: ['', Validators.required]
+      displayName: ['', Validators.required],
+      email: ['', Validators.required]
     });
 
-    try {
-      this.members.set(await lastValueFrom(this.http.get('http://localhost:5094/api/members')));
-    } catch (err) {
-      console.error(err);
-    }
+    
   }
 
   onRegister() {
-    if (this.registerForm.invalid) return;
-    this.loading = true;
-    const payload = this.registerForm.value;
-    console.log('Register payload:', payload);
-    this.http.post('http://localhost:5094/api/members', payload).subscribe({
-      next: (res: any) => { console.log('Register response:', res); alert('Registered!'); this.loading = false; },
-      error: (err: any) => { console.error('Register error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
-    });
-  }
+  if (this.registerForm.invalid) return;
+  this.loading = true;
+
+  const payload = this.registerForm.value;
+  console.log('Register payload:', payload);
+
+  this.http.post('http://localhost:5094/api/auth/register', payload).subscribe({
+    next: (res: any) => {
+      console.log('Register response:', res);
+      alert('Registered!');
+      this.loading = false;
+    },
+    error: (err: any) => {
+      console.error('Register error full:', err);
+      console.error('Validation details:', err.error?.errors);
+      alert(err?.error?.title || err?.error?.message || `Error (${err?.status || 'no-status'})`);
+      this.loading = false;
+    }
+  });
+}
 
   onLogin() {
     if (this.loginForm.invalid) return;
     this.loading = true;
     const payload = this.loginForm.value;
     console.log('Login payload:', payload);
-    this.http.post('http://localhost:5094/api/members/login', payload).subscribe({
+    this.http.post('http://localhost:5094/api/auth/login', payload).subscribe({
       next: (res: any) => { console.log('Login response:', res); alert('Logged in!'); this.loading = false; },
       error: (err: any) => { console.error('Login error full:', err); alert(err?.error?.message || ('Error (' + (err?.status || 'no-status') + ')')); this.loading = false; }
     });
